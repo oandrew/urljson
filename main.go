@@ -79,8 +79,14 @@ func main() {
 			}
 		} else {
 			r := bufio.NewScanner(os.Stdin)
+			buf := make([]byte, 0, 1024*1024)
+			r.Buffer(buf, cap(buf))
 			for r.Scan() {
 				urlToJson(r.Text())
+			}
+			if err := r.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
 			}
 		}
 	} else {
